@@ -17,6 +17,9 @@ builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
 
+builder.Services.AddTransient<IProductService, ProductService>();
+
+
 
 
 
@@ -43,15 +46,18 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
 app.MapControllerRoute(
             name: "admin",
             pattern: "{area:exists}/{controller=Main}/{action=Index}/{id?}"
           );
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+
 
 
 app.Run();

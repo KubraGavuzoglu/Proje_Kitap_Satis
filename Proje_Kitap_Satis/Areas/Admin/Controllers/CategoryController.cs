@@ -1,84 +1,86 @@
 ﻿using Kitap.Entities;
 using Kitap.Service.Abstract;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Proje_Kitap_Satis.Utils;
 
 namespace Proje_Kitap_Satis.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    
 
-    public class BrandsController : Controller
+    public class CategoryController : Controller
     {
 
-        private readonly IService<Brand> _service;
 
-        public BrandsController(IService<Brand> service)
+        private readonly IService<Category> _service;
+
+        public CategoryController(IService<Category> service)
         {
             _service = service;
         }
 
 
-        // GET: BrandsController
+
+        // GET: CategoryController
         public ActionResult Index()
         {
-            var model=_service.GetAll();
+
+            var model = _service.GetAll();
 
             return View(model);
         }
 
-        // GET: BrandsController/Details/5
+
+
+        // GET: CategoryController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            var model= await _service.FindAsync(id);
+            var model = await _service.FindAsync(id);
 
             return View(model);
         }
 
-        // GET: BrandsController/Create
+        // GET: CategoryController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: BrandsController/Create
+        // POST: CategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(Brand brand , IFormFile? Logo)
+        public async Task<ActionResult> CreateAsync(Category category, IFormFile? Image)
         {
-
             if(ModelState.IsValid)
-            {
 
+            {
                 try
                 {
-                    brand.Logo=await FileHelper.FileLoaderAsync(Logo);
-
-                    _service.Add(brand);
+                    category.Image = await FileHelper.FileLoaderAsync(Image);
+                    _service.Add(category);
                     _service.SaveChanges();
+                    
+
 
                     return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
 
-                    ModelState.AddModelError("", "Hata oluştu");
-                   
+                    ModelState.AddModelError("", "Hata Oluştu");
+                    
                 }
 
-
+              
 
 
             }
 
-            return View(brand);
-
-
+            return View(category);
 
 
         }
 
-        // GET: BrandsController/Edit/5
+        // GET: CategoryController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
             var model = await _service.FindAsync(id);
@@ -86,62 +88,70 @@ namespace Proje_Kitap_Satis.Areas.Admin.Controllers
             return View(model);
         }
 
-        // POST: BrandsController/Edit/5
+        // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id,Brand brand , IFormFile? Logo)
+        public async Task<ActionResult> EditAsync(int id, Category category , IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
 
                 try
                 {
-                    if (Logo is not null) brand.Logo = await FileHelper.FileLoaderAsync(Logo);
 
-                    _service.Update(brand);
+                    if (Image is not null) category.Image = await FileHelper.FileLoaderAsync(Image);
+
+                    _service.Update(category);
                     _service.SaveChanges();
+
+
+
+
 
                     return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
 
-                    ModelState.AddModelError("", "Hata oluştu");
-
+                    ModelState.AddModelError("", "Hata Olıştu");
+                   
                 }
 
 
 
 
             }
+            return View(category);
 
-            return View(brand);
+
+
         }
 
-        // GET: BrandsController/Delete/5
+        // GET: CategoryController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var model = await _service.FindAsync(id);
+
             return View(model);
         }
 
-        // POST: BrandsController/Delete/5
+        // POST: CategoryController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Brand brand)
+        public ActionResult Delete(int id, Category category)
         {
             try
             {
-                _service.Delete(brand);
+
+                _service.Delete(category);
                 _service.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                
+               
             }
-
             return View();
         }
     }
